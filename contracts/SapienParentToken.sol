@@ -12,7 +12,26 @@ contract SapienParentToken is ISapienParentToken, Ownable {
 
   mapping (address => bool) isBlocked;
 
-  function beforeTransfer(address sender, address to, uint256 value, bytes calldata purpose) external returns(bool) {
+  address _childContract;
+
+  constructor (address childContract) public {
+    _childContract = childContract;
+  }
+
+  modifier onlyChild() {
+    require(isChild());
+    _;
+  }
+
+  function isChild() public view returns (bool) {
+    return msg.sender == _childContract;
+  }
+
+  function child() public view returns (address) {
+    return _childContract;
+  }
+
+  function beforeTransfer(address sender, address to, uint256 value, bytes calldata purpose) external onlyChild returns(bool) {
     if (isBlocked[sender]){
       return false;
     }
