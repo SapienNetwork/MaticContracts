@@ -10,10 +10,10 @@ contract SapienParentToken is ISapienParentToken, Ownable {
 
   event Purpose(address indexed sender, address indexed to, uint256 amount, bytes purpose);
 
-  mapping (address => bool) isAllowed;
+  mapping (address => bool) isBlocked;
 
   function beforeTransfer(address sender, address to, uint256 value, bytes calldata purpose) external returns(bool) {
-    if (!isAllowed[sender]){
+    if (isBlocked[sender]){
       return false;
     }
 
@@ -24,8 +24,8 @@ contract SapienParentToken is ISapienParentToken, Ownable {
     return true;
   }
 
-  function updatePermission(address user, bool permission) public onlyOwner {
+  function updateBlocked(address user, bool permission) public onlyOwner {
     require(user != address(0x0));
-    isAllowed[user] = permission;
+    isBlocked[user] = permission;
   }
 }
