@@ -31,6 +31,10 @@ contract SapienParentToken is ISapienParentToken, Ownable {
     return _childContract;
   }
 
+  function changeChild(address childContract) public onlyOwner {
+    _childContract = childContract;
+  }
+
   function beforeTransfer(address sender, address to, uint256 value, bytes calldata purpose) external onlyChild returns(bool) {
     if (isBlocked[sender]){
       return false;
