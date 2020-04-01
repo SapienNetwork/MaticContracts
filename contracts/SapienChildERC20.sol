@@ -3,13 +3,12 @@ pragma solidity ^0.5.2;
 import './child/ChildERC20.sol';
 import "./ISapienParentToken.sol";
 
+
 contract SapienChildERC20 is ChildERC20 {
 
   constructor (address _owner, address _token, string memory _name, string memory _symbol, uint8 _decimals)
     public
-    ChildERC20(_owner, _token, _name, _symbol, _decimals) 
-    // EIP712MetaTransaction(_domainName, _version)
-    {}
+    ChildERC20(_owner, _token, _name, _symbol, _decimals) {}
 
   /// @dev Function that is called when a user or another contract wants to transfer funds.
   /// @param to Address of token receiver.
