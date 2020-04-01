@@ -3,11 +3,19 @@ const Biconomy = require("@biconomy/mexa");
 const Web3 = require("web3");
 const {abi} = require("./abi");
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1663fc1345011f7de14445bf7c6c8cf746556b5c
 let tokenAddress = "SapienChildERC20_contract_address";
 
 //Initialize Biconomy
 // register on biconomy dashboard to create dapp_id & api_key
+<<<<<<< HEAD
 const biconomy = new Biconomy(new Web3.providers.HttpProvider("https://betav2.matic.network"),
+=======
+const biconomy = new Biconomy(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/9fc37ecc1a874b9195668327b526a1a7"),
+>>>>>>> 1663fc1345011f7de14445bf7c6c8cf746556b5c
 {dappId: "dapp_id", apiKey: "api_key",debug:true});
 
 //initialise web3 with Biconomy
