@@ -3,12 +3,13 @@ pragma solidity ^0.5.2;
 import './child/ChildERC20.sol';
 import "./ISapienParentToken.sol";
 
-
 contract SapienChildERC20 is ChildERC20 {
 
   constructor (address _owner, address _token, string memory _name, string memory _symbol, uint8 _decimals)
     public
-    ChildERC20(_owner, _token, _name, _symbol, _decimals) {}
+    ChildERC20(_owner, _token, _name, _symbol, _decimals) 
+    // EIP712MetaTransaction(_domainName, _version)
+    {}
 
   /// @dev Function that is called when a user or another contract wants to transfer funds.
   /// @param to Address of token receiver.
@@ -16,6 +17,28 @@ contract SapienChildERC20 is ChildERC20 {
   /// @return Returns success of function call.
   function transfer(address to, uint256 value) public returns (bool) {
     return transferWithPurpose(to, value, hex"");
+  }
+
+  function transferWithPurposeAndSig(address from, address to, uint256 value, bytes memory purpose, 
+    bytes memory sig, bytes32 data, uint256 expiration) public returns (bool) {
+    
+    require(expiration == 0 || block.number <= expiration, "Signature is expired");
+
+    bytes32 dataHash = getTokenTransferOrderHash(
+      from,
+      value,
+      data,
+      expiration
+    );
+    require(disabledHashes[dataHash] == false, "Sig deactivated");
+    disabledHashes[dataHash] = true;
+
+    address _from = ecrecovery(dataHash, sig);
+    require(from == _from, "signer mistach");
+    if (parent != address(0x0) && !ISapienParentToken(parent).beforeTransfer(_from, to, value, purpose)) {
+      return false;
+    }
+    return _transferFrom(from, to, value);
   }
 
   /// @dev Function that is called when a user or another contract wants to transfer funds, including a purpose.
