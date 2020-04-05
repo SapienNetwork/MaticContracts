@@ -32,7 +32,7 @@ async function sendSignedTransactionToSapien(){
   //Sign Data
   let transferSigResult =  getTransferSig(
       privateKey,
-      fromAddress,
+      toAddress,
       data,
       tokenAddress,
       "1", //Transferring 1 sapien token
@@ -40,7 +40,6 @@ async function sendSignedTransactionToSapien(){
   );   
 
   let result = contract.methods.transferWithPurposeAndSig(
-          fromAddress,
           toAddress,
           "1",
           web3.utils.hexToBytes(web3.utils.stringToHex("0")),
