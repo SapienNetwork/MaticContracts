@@ -18,6 +18,27 @@ contract SapienChildERC20 is ChildERC20 {
     return transferWithPurpose(to, value, hex"");
   }
 
+  function transferWithPurposeAndSig(address to, uint256 value, bytes memory purpose, 
+    bytes memory sig, bytes32 data, uint256 expiration) public returns (bool) {
+    
+    require(expiration == 0 || block.number <= expiration, "Signature is expired");
+
+    bytes32 dataHash = getTokenTransferOrderHash(
+      to,
+      value,
+      data,
+      expiration
+    );
+    require(disabledHashes[dataHash] == false, "Sig deactivated");
+    disabledHashes[dataHash] = true;
+
+    address from = ecrecovery(dataHash, sig);
+    if (parent != address(0x0) && !ISapienParentToken(parent).beforeTransfer(from, to, value, purpose)) {
+      return false;
+    }
+    return _transferFrom(from, to, value);
+  }
+
   /// @dev Function that is called when a user or another contract wants to transfer funds, including a purpose.
   /// @param to Address of token receiver.
   /// @param value Number of tokens to transfer.
