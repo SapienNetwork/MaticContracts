@@ -1,0 +1,17 @@
+{
+  "name": "script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@biconomy/mexa": "^1.5.1",
+    "eth-sig-util": "^2.5.3",
+    "ethereumjs-util": "^6.2.0",
+    "web3": "^1.2.6"
+  }
+}

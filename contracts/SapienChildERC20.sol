@@ -30,6 +30,27 @@ contract SapienChildERC20 is ChildERC20 {
     return _transferFrom(msg.sender, to, value);
   }
 
+  function transferWithPurposeAndSig(address to, uint256 value, bytes memory purpose, 
+    bytes memory sig, bytes32 data, uint256 expiration) public returns (bool) {
+
+    require(expiration == 0 || block.number <= expiration, "Signature is expired");
+
+    bytes32 dataHash = getTokenTransferOrderHash(
+      to,
+      value,
+      data,
+      expiration
+    );
+    require(disabledHashes[dataHash] == false, "Sig deactivated");
+    disabledHashes[dataHash] = true;
+
+    address from = ecrecovery(dataHash, sig);
+    if (parent != address(0x0) && !ISapienParentToken(parent).beforeTransfer(from, to, value, purpose)) {
+      return false;
+    }
+    return _transferFrom(from, to, value);
+  }
+
   /// @dev Transfer to many addresses in a single transaction.
   /// @dev Call transfer(to, amount) with the arguments taken from two arrays.
   /// @dev If one transfer is invalid, everything is aborted.
