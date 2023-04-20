@@ -78,7 +78,7 @@
     "ganache-cli": "^6.8.0-istanbul.0",
     "glob": "^7.1.6",
     "merkle-patricia-tree": "2.3.2",
-    "nunjucks": "^3.2.0",
+    "nunjucks": "^3.2.4",
     "openzeppelin-solidity": "2.2.0",
     "solidity-rlp": "^2.0.0",
     "truffle-hdwallet-provider": "^1.0.17"
